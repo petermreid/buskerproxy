@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\inetpub\wwwroot\WebApiRouter</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>07/27/2013 22:42:53</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>07/11/2012 11:51:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>07/11/2012 11:51:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>07/27/2013 22:42:57</publishTime>
+    </File>
+    <File Include="bin/WebAPIRouter.dll">
+      <publishTime>08/25/2013 11:28:11</publishTime>
+    </File>
+    <File Include="bin/WebAPIRouter.pdb">
+      <publishTime>08/25/2013 11:28:11</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>07/27/2013 22:42:39</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>08/24/2013 19:24:36</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>08/25/2013 11:28:11</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

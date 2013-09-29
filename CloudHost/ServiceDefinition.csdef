@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="CloudHost" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-03.2.0">
+  <WorkerRole name="WorkerRole" enableNativeCodeExecution="true" vmsize="Small">
+    <Runtime executionContext="elevated"/>
+    <Startup>
+      <Task commandLine="GrantHttpACL.exe" executionContext="elevated" taskType="simple" />
+    </Startup>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
+    </Imports>
+    <Endpoints>
+      <InputEndpoint port="8080" localPort="8080" name="proxy" protocol="http" />
+      <InputEndpoint port="80" localPort="80" name="proxyconfig" protocol="http" />
+    </Endpoints>
+  </WorkerRole>
+</ServiceDefinition>
