@@ -12,6 +12,7 @@ namespace BuskerProxy.Handlers
             : base(content)
         {
             SetAtomContentType();
+
         }
 
         private void SetAtomContentType()
