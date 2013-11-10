@@ -17,7 +17,7 @@ namespace BuskerProxy.Handlers
         protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             UriBuilder forwardUri = new UriBuilder(request.RequestUri);
-
+            //strip off and replace the port that was used by the proxy
             forwardUri.Port = 80;
             request.RequestUri = forwardUri.Uri;
 

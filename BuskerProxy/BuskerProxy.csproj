@@ -93,10 +93,7 @@
     <Compile Include="Hubs\LoggingHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="App_Start\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="logging.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -136,9 +133,6 @@
       <Project>{23181e8c-4dd9-46e8-b74e-c53a11eb6c8d}</Project>
       <Name>RoutingConfig</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
