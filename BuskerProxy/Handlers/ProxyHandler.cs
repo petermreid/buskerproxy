@@ -12,7 +12,7 @@ namespace BuskerProxy.Handlers
     {
         protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
-            //dont know why but have to explicitly null it to avoid protocol violation
+            //have to explicitly null it to avoid protocol violation
             if (request.Method == HttpMethod.Get)
                 request.Content = null;
 

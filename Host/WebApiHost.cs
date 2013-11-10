@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.ServiceModel;
 using System.Web.Http;
-using System.Web.Http.SelfHost;
+using Microsoft.Owin.Hosting;
 
 namespace BuskerProxy.Host
 {
@@ -12,37 +11,34 @@ namespace BuskerProxy.Host
     {
         private static List<IDisposable> apps = new List<IDisposable>();
 
-        public static HttpServer Listen(string baseAddress)
+        public static void Listen(string baseAddress)
         {
-            // Need lots of outgoing connections and hang on to them
-            ServicePointManager.DefaultConnectionLimit = 20;
-            ServicePointManager.MaxServicePointIdleTime = 10000;
-            //send packets as soon as you get them
-            ServicePointManager.UseNagleAlgorithm = false;
-            //send both header and body together
-            ServicePointManager.Expect100Continue = false;
+            //// Need lots of outgoing connections and hang on to them
+            //ServicePointManager.DefaultConnectionLimit = 20;
+            //ServicePointManager.MaxServicePointIdleTime = 10000;
+            ////send packets as soon as you get them
+            //ServicePointManager.UseNagleAlgorithm = false;
+            ////send both header and body together
+            //ServicePointManager.Expect100Continue = false;
 
             try
             {
-                var config = new HttpSelfHostConfiguration(baseAddress)
-                {
-                    HostNameComparisonMode = HostNameComparisonMode.StrongWildcard,
-                    IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always,
-                    TransferMode = System.ServiceModel.TransferMode.Streamed
-                };
+                //var config = new HttpSelfHostConfiguration(baseAddress)
+                //{
+                //    HostNameComparisonMode = HostNameComparisonMode.StrongWildcard,
+                //    IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always,
+                //    TransferMode = System.ServiceModel.TransferMode.Streamed
+                //};
 
-                WebApiConfig.Register(config);
-                HttpSelfHostServer server = new HttpSelfHostServer(config);
-                server.OpenAsync().Wait();
-
-                apps.Add(server);
-                Trace.TraceInformation("Listening on:" + config.BaseAddress);
-                return server;
+                // Start OWIN host 
+                StartOptions options = new StartOptions(baseAddress);
+                IDisposable app = WebApp.Start<Startup>(options);
+                Trace.TraceInformation("Listening on:" + baseAddress); 
+                apps.Add(app);
             }
             catch (Exception ex)
             {
                 Trace.TraceInformation(ex.Message + ':' + ex.InnerException.Message);
-                return null;
             }
 
         }

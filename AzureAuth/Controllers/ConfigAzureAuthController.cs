@@ -11,7 +11,7 @@ namespace BuskerProxy.Controllers
     public class ConfigAzureAuthController : ApiController
     {
         // GET,POST config/azureauth?name=blah&host=blah&connectionString=blah
-        //config/azureauth?name=backtester&host=backtester.table.core.windows.net&connectionString=DefaultEndpointsProtocol=http;AccountName=backtester;AccountKey=QXLXE/PUK6rnFpdO6LMnq/e5FFNoTBiJKUvG/9CsHlYKHrM1zFBhlUew006eWtPG3TvJfHH8YCDxa8aiS8nhEw==
+        //config/azureauth?name=backtester&host=backtester.table.core.windows.net&connectionString=DefaultEndpointsProtocol=http;AccountName=backtester;AccountKey=
         [HttpGet]
         [HttpPost]
         public HttpResponseMessage Register([FromUri]string name, [FromUri]string host, [FromUri]string connectionString)

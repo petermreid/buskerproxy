@@ -16,13 +16,6 @@ namespace BuskerProxy.Handlers
     {
         protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
-            if (request.RequestUri.Port<1000)
-            {
-                //if we've come in on port 80 then its a direct request to the proxy
-                var response = request.CreateResponse(HttpStatusCode.OK, new StringContent("<h1>BuskerProxy</h1>"),"text/html");
-                Trace.TraceInformation("Request to:BuskerProxy"); 
-                return response;
-            }
             UriBuilder forwardUri = new UriBuilder(request.RequestUri);
 
             forwardUri.Port = 80;

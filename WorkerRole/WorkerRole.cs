@@ -1,10 +1,9 @@
-using BuskerProxy.Host;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using System;
 using System.Diagnostics;
-using System.Net;
 using System.Threading;
+using BuskerProxy.Host;
 
 namespace WorkerRole
 {
@@ -40,7 +39,7 @@ namespace WorkerRole
                         endpoint.Protocol, endpoint.IPEndpoint);
 
                     Trace.TraceInformation(String.Format("Starting OWIN at {0}", baseUri));
-                    WebApiHost.Listen(baseUri);
+                    Proxy.Start(baseUri);
                 }
             }
             return base.OnStart();
@@ -48,7 +47,7 @@ namespace WorkerRole
 
         public override void OnStop()
         {
-            WebApiHost.UnListen();
+            Proxy.Stop();
         }
     }
 }

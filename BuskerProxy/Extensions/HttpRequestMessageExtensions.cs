@@ -12,6 +12,10 @@ namespace BuskerProxy.Extensions
             {
                 return ((dynamic)request.Properties["MS_HttpContext"]).Request.UserHostAddress as string;
             }
+            else if (request.Properties.ContainsKey("MS_OwinContext"))
+            {
+                return ((dynamic)request.Properties["MS_OwinContext"]).Request.RemoteIpAddress as string;
+            }
             else if (request.Properties.ContainsKey(RemoteEndpointMessageProperty.Name))
             {
                 RemoteEndpointMessageProperty prop;
