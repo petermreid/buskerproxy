@@ -6,7 +6,7 @@ namespace ConsoleHost
 {
     class Program
     {
-        static string proxyAddress = @"http://127.0.0.1:8080/"; 
+        static string proxyAddress = @"http://*:8080/"; 
 
         static void Main(string[] args)
         {

@@ -108,9 +108,17 @@
       <Project>{44fe6068-aec7-44e4-8446-5fa34df1afd6}</Project>
       <Name>BuskerProxy</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Flipper\Flipper.csproj">
+      <Project>{cb2d46d5-8d2c-46b6-9d07-0cf7d2cc19d9}</Project>
+      <Name>Flipper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GrantHttpACL\GrantHttpACL.csproj">
       <Project>{059a6eae-edee-430b-9548-abe7bb5d405f}</Project>
       <Name>GrantHttpACL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Logging.csproj">
+      <Project>{b4d72e01-09c3-4d58-8b29-2d43b5855f84}</Project>
+      <Name>Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoutingConfig\RoutingConfig.csproj">
       <Project>{23181e8c-4dd9-46e8-b74e-c53a11eb6c8d}</Project>

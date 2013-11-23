@@ -13,8 +13,7 @@ namespace BuskerProxy.Handlers
         protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             //have to explicitly null it to avoid protocol violation
-            if (request.Method == HttpMethod.Get)
-                request.Content = null;
+            if (request.Method == HttpMethod.Get || request.Method == HttpMethod.Trace) request.Content = null;
 
             HttpClient client = new HttpClient();
             try
@@ -27,6 +26,9 @@ namespace BuskerProxy.Handlers
                 //so its unchunked when we pass it back to the requester
                 response.Headers.TransferEncodingChunked = false;
                 AddProxyResponseHeader(response);
+                //same again clear out due to protocol violation
+                if (request.Method == HttpMethod.Head)
+                    response.Content = null;
                 return response;
             }
             catch (Exception ex)

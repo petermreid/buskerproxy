@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.ServiceModel.Channels;
 using Microsoft.AspNet.SignalR;
 
 namespace BuskerProxy.Extensions
