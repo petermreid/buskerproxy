@@ -11,31 +11,48 @@ using System.Drawing;
 
 namespace BuskerProxy.Handlers
 {
-    // FlipperHandler.cs
-    public class FlipperHandler : DelegatingHandler
+    // ImageHandler.cs
+    public class ImageHandler : DelegatingHandler
     {
-        private static HashSet<string> connections = new HashSet<string>();
+        private static HashSet<string> flipConnections = new HashSet<string>();
 
         public static bool Flip(string ipaddress)
         {
-            if (connections.Contains(ipaddress))
+            if (flipConnections.Contains(ipaddress))
             {
-                connections.Remove(ipaddress);
+                flipConnections.Remove(ipaddress);
                 return false;
             }
             else
             {
-                connections.Add(ipaddress);
+                flipConnections.Add(ipaddress);
                 return true;
             }
         }
+
+        private static HashSet<string> bwConnections = new HashSet<string>();
+
+        public static bool BW(string ipaddress)
+        {
+            if (bwConnections.Contains(ipaddress))
+            {
+                bwConnections.Remove(ipaddress);
+                return false;
+            }
+            else
+            {
+                bwConnections.Add(ipaddress);
+                return true;
+            }
+        }
+
 
         protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
             try
             {
                 HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
-                if (connections.Contains(request.GetClientIp()))
+                if (flipConnections.Contains(request.GetClientIp()) || bwConnections.Contains(request.GetClientIp()))
                 {
                     System.Drawing.Imaging.ImageFormat fmt;
                     MediaTypeHeaderValue mediatype = response.Content.Headers.ContentType;
@@ -43,24 +60,39 @@ namespace BuskerProxy.Handlers
                     {
                         var streamin = await response.Content.ReadAsStreamAsync();
 
-                        using (Image image = Image.FromStream(streamin))
+                        using (Bitmap bmp = new Bitmap(Image.FromStream(streamin)))
                         {
-                            image.RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                            if(flipConnections.Contains(request.GetClientIp()))
+                                bmp.RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                            if(bwConnections.Contains(request.GetClientIp()))
+                                MakeBW(bmp);
                             var msout = new MemoryStream();
-                            image.Save(msout, fmt);
+                            bmp.Save(msout, fmt);
                             msout.Position=0;
                             response.Content = new StreamContent(msout);
                             response.Content.Headers.ContentType = mediatype;
                         }
                     }
                 }
-
                 return response;
             }
             catch (Exception ex)
             {
                 var response = request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
                 return response;
+            }
+        }
+
+        private static void MakeBW(Bitmap bmp)
+        {
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    Color pxl = bmp.GetPixel(x, y);
+                    int avg = (pxl.R + pxl.G + pxl.B) / 3;
+                    bmp.SetPixel(x, y, Color.FromArgb(avg, avg, avg));
+                }
             }
         }
 

@@ -59,13 +59,13 @@ namespace BuskerProxy.Host
 
         private void RegisterRoutes(HttpConfiguration config)
         {
-            //anything with busker in the name send to the static file handler
-            //http://busker.cloudapp.net/logging.html
+            //anything with buskerproxy in the name send to the static file handler
+            //http://buskerproxy.cloudapp.net/logging.html
             config.Routes.MapHttpRoute(
                 name: "Busker",
                 routeTemplate: "{*path}",
                 defaults: new { path = RouteParameter.Optional },
-                constraints: new { isLocal = new HostConstraint { Host = "busker" } },
+                constraints: new { isLocal = new HostConstraint { Host = "buskerproxy" } },
                 handler: new StaticFileHandler() 
             );
 
@@ -78,14 +78,25 @@ namespace BuskerProxy.Host
                     constraints: new { isLocal = new HostConstraint { Host = "table.core.windows.net" } }
                 );
 
-            //now plug in the flipper 
-            //http://www.flipper.com
+            config.MapHttpAttributeRoutes();
+
+            //now plug in the image handler 
+            //http://www.buskerimage.com/flip
             config.Routes.MapHttpRoute(
-                    name: "Flipper",
-                    routeTemplate: "{*path}",
-                    defaults: new { controller = "Flipper" },
-                    constraints: new { isLocal = new HostConstraint { Host = "flipper" } }
+                    name: "BuskerImageFlip",
+                    routeTemplate: "flip",
+                    defaults: new { controller = "Image" },
+                    constraints: new { isLocal = new HostConstraint { Host = "buskerimage" } }
                 );
+
+            //now plug in the image handler 
+            //http://www.buskerimage.com/bw
+            config.Routes.MapHttpRoute(
+                name: "BuskerImageBW",
+                routeTemplate: "bw",
+                defaults: new { controller = "Image" },
+                constraints: new { isLocal = new HostConstraint { Host = "buskerimage" } }
+            );
 
             //anything that needs to fall through needs to go in the pipeline
             config.Routes.MapHttpRoute(
@@ -99,7 +110,7 @@ namespace BuskerProxy.Host
                         new PortStripHandler(),
                         new AzureAuthHandler(),
                         new LoggingHandler(),
-                        new FlipperHandler(),
+                        new ImageHandler(),
                         new ProxyHandler() 
                     }
                 ),

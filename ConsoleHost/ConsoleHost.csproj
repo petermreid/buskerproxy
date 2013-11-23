@@ -98,9 +98,9 @@
       <Project>{44fe6068-aec7-44e4-8446-5fa34df1afd6}</Project>
       <Name>BuskerProxy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Flipper\Flipper.csproj">
+    <ProjectReference Include="..\Image\Image.csproj">
       <Project>{cb2d46d5-8d2c-46b6-9d07-0cf7d2cc19d9}</Project>
-      <Name>Flipper</Name>
+      <Name>Image</Name>
     </ProjectReference>
     <ProjectReference Include="..\Logging\Logging.csproj">
       <Project>{b4d72e01-09c3-4d58-8b29-2d43b5855f84}</Project>
