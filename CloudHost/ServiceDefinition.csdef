@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="BuskerProxyCloudHost" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
   <WorkerRole name="WorkerRole" enableNativeCodeExecution="true" vmsize="Small">
-    <Runtime />
+    <!--need to run elevated so we can pick up files and server them-->
+    <Runtime executionContext="elevated" />
     <Startup>
       <Task commandLine="GrantHttpACL.exe" executionContext="elevated" taskType="simple" />
     </Startup>
     <Imports>
       <Import moduleName="Diagnostics" />
-      <Import moduleName="RemoteAccess" />
-      <Import moduleName="RemoteForwarder" />
     </Imports>
     <Endpoints>
       <InputEndpoint port="8080" localPort="8080" name="proxy" protocol="http" />

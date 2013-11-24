@@ -81,7 +81,7 @@ namespace BuskerProxy.Host
             config.MapHttpAttributeRoutes();
 
             //now plug in the image handler 
-            //http://www.buskerimage.com/flip
+            //http://buskerimage.cloudapp.net/flip
             config.Routes.MapHttpRoute(
                     name: "BuskerImageFlip",
                     routeTemplate: "flip",
@@ -90,7 +90,7 @@ namespace BuskerProxy.Host
                 );
 
             //now plug in the image handler 
-            //http://www.buskerimage.com/bw
+            //http://buskerimage.cloudapp.net/bw
             config.Routes.MapHttpRoute(
                 name: "BuskerImageBW",
                 routeTemplate: "bw",
