@@ -59,13 +59,13 @@ namespace BuskerProxy.Host
 
         private void RegisterRoutes(HttpConfiguration config)
         {
-            //anything with buskerproxy in the name send to the static file handler
-            //http://buskerproxy.cloudapp.net/logging.html
+            //anything with busker in the name send to the static file handler
+            //http://busker.cloudapp.net/logging.html
             config.Routes.MapHttpRoute(
                 name: "Busker",
                 routeTemplate: "{*path}",
                 defaults: new { path = RouteParameter.Optional },
-                constraints: new { isLocal = new HostConstraint { Host = "buskerproxy" } },
+                constraints: new { isLocal = new HostConstraint { Host = "busker" } },
                 handler: new StaticFileHandler() 
             );
 

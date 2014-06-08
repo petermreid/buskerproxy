@@ -5,6 +5,7 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using BuskerProxy.Handlers;
 using BuskerProxy.Extensions;
+using System.Diagnostics;
 
 namespace BuskerProxy.Hubs
 {
@@ -12,6 +13,7 @@ namespace BuskerProxy.Hubs
     {
         public void Start()
         {
+            Trace.WriteLine("connection", Context.ConnectionId); 
            //when a user clicks on Start in the browser, add this client ip address to the list registered for logging       
            LoggingHandler.Register(Context.Request.GetClientIp(), Context.ConnectionId);
         }

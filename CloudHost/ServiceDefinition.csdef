@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceDefinition name="BuskerProxyCloudHost" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
-  <WorkerRole name="WorkerRole" enableNativeCodeExecution="true" vmsize="Small">
+<ServiceDefinition name="BuskerProxyCloudHost" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-01.2.3">
+  <WorkerRole name="WorkerRole" enableNativeCodeExecution="true" vmsize="ExtraSmall">
     <!--need to run elevated so we can pick up files and server them-->
     <Runtime executionContext="elevated" />
     <Startup>

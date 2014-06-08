@@ -10,7 +10,7 @@ namespace BuskerProxy.Extensions
         {
             object ipaddress; 
 
-            //to be replaced by OwinConstants
+            //to be replaced by OwinConstants when available
             if(request.Environment.TryGetValue("server.RemoteIpAddress", out ipaddress))
             {
                 return (string)ipaddress;
