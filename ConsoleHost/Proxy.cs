@@ -1,6 +1,7 @@
 ﻿using BuskerProxy.Handlers;
 using Microsoft.Owin;
 using Microsoft.Owin.Hosting;
+using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace BuskerProxy.Host
         public void Configuration(IAppBuilder appBuilder)
         {
             appBuilder.MapSignalR();
-            
+            //appBuilder.UseStaticFiles();
             // Configure Web API for self-host. 
             HttpConfiguration httpconfig = new HttpConfiguration();
             RegisterRoutes(httpconfig);

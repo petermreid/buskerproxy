@@ -70,7 +70,7 @@ namespace BuskerProxy.Handlers
 
         private bool CanUseCache(HttpRequestMessage request)
         {
-            if (request.Method==HttpMethod.Get|| request.Method==HttpMethod.Put)
+            if (request.Method==HttpMethod.Get || request.Method==HttpMethod.Put)
             {
                 // client can tell CachingHandler not to do caching for a particular request
                 if (request.Headers.CacheControl != null)
