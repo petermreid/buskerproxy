@@ -1,14 +1,12 @@
 ﻿using BuskerProxy.Handlers;
 using Microsoft.Owin;
 using Microsoft.Owin.Hosting;
-using Microsoft.Owin.StaticFiles;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Dispatcher;
 
 [assembly: OwinStartup(typeof(BuskerProxy.Host.Proxy))]
 
@@ -24,7 +22,7 @@ namespace BuskerProxy.Host
             {
                 // Start OWIN proxy host 
                 apps.Add(WebApp.Start<Proxy>(proxyAddress));
-                Trace.TraceInformation("Listening on:" + proxyAddress);
+                Trace.WriteLine("Proxy server is running");
                 Trace.WriteLine("Set your IE proxy to:" + proxyAddress);
             }
             catch (Exception ex)

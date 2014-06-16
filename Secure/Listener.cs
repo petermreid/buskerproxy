@@ -9,6 +9,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 
 namespace BuskerProxy.Secure
 {
@@ -38,8 +39,8 @@ namespace BuskerProxy.Secure
             TcpListener listener = new TcpListener(_secureProxyAddress, _secureProxyPort);
 
             listener.Start();
-            LogMessage("Server is running");
-            LogMessage("Listening on port " + _secureProxyPort);
+            Trace.WriteLine("Secure server is running");
+            Trace.WriteLine("Set your IE proxy to:" + _secureProxyAddress + ':' + _secureProxyPort);
 
             try
             {
@@ -163,17 +164,29 @@ namespace BuskerProxy.Secure
 
                 string line;
                 int contentLength = 0;
-
+                bool chunked = false;
                 //copy the headers
                 while (!String.IsNullOrEmpty(line = fromStreamReader.ReadLine()))
                 {
                     if (line.StartsWith("Content-Length:", true, CultureInfo.CurrentCulture))
                         contentLength = int.Parse(line.Replace("Content-Length:", ""));
+                    if (line.StartsWith("Transfer-Encoding: chunked", true, CultureInfo.CurrentCulture))
+                        chunked = true;
                     toStreamWriter.WriteLine(line);
                 }
                 toStreamWriter.WriteLine();
                 if (contentLength > 0)
                     toStreamWriter.Write(fromStreamReader.ReadBytes(contentLength));
+
+                if(chunked)
+                {
+                    while (!String.IsNullOrEmpty(line = fromStreamReader.ReadLine()))
+                    {
+                        contentLength = int.Parse(line, System.Globalization.NumberStyles.HexNumber);
+                        toStreamWriter.Write(fromStreamReader.ReadBytes(contentLength));
+                        fromStreamReader.ReadLine();
+                    }
+                }
                 toStreamWriter.Flush();
             }
         }
@@ -197,8 +210,8 @@ namespace BuskerProxy.Secure
 
         private static void LogMessage(string message, [CallerMemberName]string callername = "")
         {
-            System.Console.WriteLine("[{0}] - Thread-{1}- {2}",
-                    callername, Thread.CurrentThread.ManagedThreadId, message);
+            Trace.WriteLine(String.Format("[{0}] - Thread-{1}- {2}",
+                    callername, Thread.CurrentThread.ManagedThreadId, message));
         }
     }
 }
