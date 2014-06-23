@@ -15,6 +15,12 @@ namespace BuskerProxy.Handlers
             //have to explicitly null it to avoid protocol violation
             if (request.Method == HttpMethod.Get || request.Method == HttpMethod.Trace) request.Content = null;
 
+            //now check if the request came from our secure listener then outgoing needs to be secure
+            if (request.Headers.Contains("X-Forward-Secure"))
+            {
+                request.RequestUri = new UriBuilder(request.RequestUri) { Scheme = Uri.UriSchemeHttps, Port = -1 }.Uri;
+                request.Headers.Remove("X-Forward-Secure");
+            }
             HttpClient client = new HttpClient();
             try
             {
@@ -24,7 +30,8 @@ namespace BuskerProxy.Handlers
 
                 //the WebAPI stack unchunks the response, 
                 //so its unchunked when we pass it back to the requester
-                response.Headers.TransferEncodingChunked = false;
+                //(dont think this is actually true)
+                //response.Headers.TransferEncodingChunked = false;
                 AddProxyResponseHeader(response);
                 //same again clear out due to protocol violation
                 if (request.Method == HttpMethod.Head)

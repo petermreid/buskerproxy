@@ -86,7 +86,7 @@ namespace BuskerProxy.Secure
 
         private static void ForwardClientToProxy(TcpClient tcpClient, TcpClient tcpProxy)
         {
-            string httpCmd;
+            string firstLine;
             string method;
             string version;
             string url;
@@ -95,31 +95,23 @@ namespace BuskerProxy.Secure
             Stream clientStream = tcpClient.GetStream();
             Stream proxyStream = tcpProxy.GetStream();
 
-            httpCmd = clientStream.ReadLine();
-            ParseHttpCommand(httpCmd, out method, out url, out version);
+            firstLine = clientStream.ReadLine();
+            ParseHttpCommand(firstLine, out method, out url, out version);
             if (method == "CONNECT")
             {
                 //client wants to ssl tunnel through the proxy
                 clientStream = GetSslTunnelStream(clientStream, version);
                 if (clientStream == null)
                     return;
-                httpCmd = clientStream.ReadLine();
+                firstLine = clientStream.ReadLine();
                 sslTunnelDomain = url;
             }
-            if (!String.IsNullOrEmpty(sslTunnelDomain))
-            {
-                //modify the path in the http request to include the domain
-                ParseHttpCommand(httpCmd, out method, out url, out version);
-                //modify the forward address so it has complete URL 
-                httpCmd = method + ' ' + "https://" + sslTunnelDomain + url + ' ' + version;
-            }
 
-            LogMessage(string.Format(httpCmd));
-            proxyStream.WriteLine(httpCmd);
-            proxyStream.Flush();
-            CopyHttpStream(clientStream, proxyStream);
+            //request
+            CopyHttpStream(clientStream, proxyStream, firstLine, sslTunnelDomain);
+            //response 
             CopyHttpStream(proxyStream, clientStream);
-
+            firstLine = "";
             clientStream.Close();
             proxyStream.Close();
         }
@@ -154,17 +146,37 @@ namespace BuskerProxy.Secure
             return sslStream;
         }
 
-        private static void CopyHttpStream(Stream fromStream, Stream toStream, string httpCmd = "", Encoding encoding = null)
+        private static bool CopyHttpStream(Stream fromStream, Stream toStream, string firstLine = "", string sslTunnelDomain="")
         {
-            if (encoding == null)
-                encoding = Encoding.UTF8;
+            bool keepAlive = false; 
+            var encoding = Encoding.UTF8;
+            string method;
+            string version;
+            string url;
+
             using (var fromStreamReader = new BinaryReader(fromStream, encoding, true))
             using (var toStreamWriter = new BinaryWriter(toStream, encoding, true))
             {
+                if (String.IsNullOrEmpty(firstLine))
+                    firstLine = fromStream.ReadLine();
+
+                if (!String.IsNullOrEmpty(sslTunnelDomain))
+                {
+                    //modify the path in the http request to include the domain
+                    ParseHttpCommand(firstLine, out method, out url, out version);
+                    //modify the forward address so it has complete URL 
+                    firstLine = method + ' ' + "https://" + sslTunnelDomain + url + ' ' + version;
+                    firstLine += "\r\n";
+                    firstLine += "X-Forward-Secure: true";
+                }
+                LogMessage(string.Format(firstLine));
+                toStream.WriteLine(firstLine);
+                toStream.Flush();
 
                 string line;
                 int contentLength = 0;
                 bool chunked = false;
+
                 //copy the headers
                 while (!String.IsNullOrEmpty(line = fromStreamReader.ReadLine()))
                 {
@@ -172,6 +184,8 @@ namespace BuskerProxy.Secure
                         contentLength = int.Parse(line.Replace("Content-Length:", ""));
                     if (line.StartsWith("Transfer-Encoding: chunked", true, CultureInfo.CurrentCulture))
                         chunked = true;
+                    if (line.StartsWith("Proxy-Connection: Keep-Alive", true, CultureInfo.CurrentCulture))
+                        keepAlive = true;
                     toStreamWriter.WriteLine(line);
                 }
                 toStreamWriter.WriteLine();
@@ -189,6 +203,7 @@ namespace BuskerProxy.Secure
                 }
                 toStreamWriter.Flush();
             }
+            return keepAlive;
         }
 
         private static void ParseHttpCommand(string httpCmd, out string method, out string requestPath, out string version)
